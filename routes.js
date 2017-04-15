@@ -21,7 +21,7 @@ var sendResponse = function(res,err,data){
 module.exports = function(app) {
 
 	app.post('/auth/token', function(req, res, next) {
-		AuthController.checkToken(req.app.appId,req.auth.token,function(err,rUser){
+		AuthController.checkToken(req.app.appId,req.auth.token, function (err,rUser) {
 		return sendResponse(res,err,rUser);
 		});
 	});  

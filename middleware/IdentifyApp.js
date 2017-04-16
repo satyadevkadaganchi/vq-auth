@@ -4,7 +4,7 @@ const models = require('../models/models');
   Middleware for identifing app
   if the app is identified, the app property on request will be set with appName {string} and appId {number}
 */
-const identifyApp = (req,res,next) => {
+const identifyApp = (req, res, next) => {
   if (!req.auth) {
     return next();
   }
@@ -26,7 +26,7 @@ const identifyApp = (req,res,next) => {
           req.app = false;
       }
 
-      next();
+      return next();
   }, err => res.status(502).send(err));
 };
 

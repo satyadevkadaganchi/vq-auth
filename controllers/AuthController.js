@@ -4,7 +4,7 @@ var AuthService = require("../services/AuthService.js");
 function checkToken(appId,token,callback) {
   
 	if(!appId||!token){
-		return callback({status:400,code:"INITIAL_PARAMS"});
+		return callback({status:400, code:"INITIAL_PARAMS"});
 	}
   var User;
   async.waterfall([
@@ -14,7 +14,7 @@ function checkToken(appId,token,callback) {
           return callback(err);
         }
           if(!rUser){   
-             return callback({status:400,code:"WRONG_TOKEN"});  
+             return callback({status:400, code:"WRONG_TOKEN"});  
           }
              User = rUser;
              return callback();

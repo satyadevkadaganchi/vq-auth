@@ -1,8 +1,8 @@
 module.exports = (sequelize, DataTypes) => {
   const Model = sequelize.define("app", {
-      app_name: { type: DataTypes.STRING },
-      app_key: { type: DataTypes.STRING },
-      api_key: { type: DataTypes.STRING }
+      appName: { type: DataTypes.STRING },
+      appKey: { type: DataTypes.STRING },
+      apiKey: { type: DataTypes.STRING }
   }, {
     tableName: 'app',
     classMethods: {

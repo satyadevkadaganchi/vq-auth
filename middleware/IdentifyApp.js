@@ -20,14 +20,18 @@ const identifyApp = (req, res, next) => {
     ]
   }})
   .then(app => {
-     if (app[0]) {
-          req.app = app[0];
+     if (app) {
+          req.app = app.dataValues;
       } else {
           req.app = false;
       }
 
       return next();
-  }, err => res.status(502).send(err));
+  }, err => {
+    console.error(err);
+
+    return res.status(502).send(err)
+  });
 };
 
 module.exports = identifyApp;

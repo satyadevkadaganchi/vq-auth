@@ -25,7 +25,7 @@ module.exports = function(app) {
 	});  
 	
 	app.post('/auth/networks/facebook',function(req,res){
-		var appId = req.app ? req.app.appId : false;
+		var appId = req.app ? req.app.id : false;
 		var token = req.body.token;
 		var refreshToken = req.body.refreshToken;
 		var Profile = req.body.Profile;
@@ -35,23 +35,23 @@ module.exports = function(app) {
     	});
 	});
 
-	app.post('/auth/local/signup', function(req,res) {
-		var appId = req.app ? req.app.appId : false;
+	app.post('/auth/local/signup', function (req,res) {
+		var appId = req.app ? req.app.id : false;
 		var email = req.body.email;
 		var password = req.body.password;
 
-		SignupController.createLocalAccount(appId,email,password,function(err,rUser){
+		SignupController.createLocalAccount(appId, email, password, function (err,rUser) {
 			return sendResponse(res,err,rUser);
 		});
 	});
 
 	
-	app.post('/auth/local/login', function(req,res) {
-		var appId = req.app ? req.app.appId : false;
+	app.post('/auth/local/login', function (req,res) {
+		var appId = req.app ? req.app.id : false;
 		var email = req.body.email;
 		var password = req.body.password;
     
-		LoginController.loginWithPassword(appId,email,password,function(err,rUser){
+		LoginController.loginWithPassword(appId,email,password, function(err,rUser) {
 			if (err) {
 				console.error(err);
 

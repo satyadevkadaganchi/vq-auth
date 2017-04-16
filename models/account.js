@@ -4,7 +4,7 @@ module.exports = (sequelize, DataTypes) => {
     tableName: 'account',
     classMethods: {
         associate: models => {
-            // Model.hasMany(models.app);
+            Model.hasMany(models.app);
         }
     }
   });

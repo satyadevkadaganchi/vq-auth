@@ -2,20 +2,20 @@ var fs = require("fs");
 var path = require("path");
 var Sequelize = require("sequelize");
 
-var sequelize = new Sequelize(process.env.VA_ENV.toLowerCase() === 'production' ? process.env.VQ_VA_DB : 'mysql://root:kurwa@localhost:3306/vq', {
+var sequelize = new Sequelize(process.env.VA_ENV === 'production' ? process.env.VQ_VA_DB : 'mysql://root:kurwa@localhost:3306/vq-auth', {
   dialect: 'mysql',
   pool: {
     max: 50,
     min: 0,
     idle: 10000
-  },
+  }
 });
 
 var db = {};
 
 fs.readdirSync(__dirname)
     .filter(function(file) {
-        return (file.indexOf(".") !== 0) && (file !== "index.js");
+        return (file.indexOf(".") !== 0) && (file !== "models.js") && (file === "account.js");
     })
     .forEach(function(file) {
         var model = sequelize.import(path.join(__dirname, file));

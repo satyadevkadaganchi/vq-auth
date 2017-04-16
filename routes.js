@@ -1,7 +1,5 @@
 var AuthController = require("./controllers/AuthController.js");
 var NetworkController = require("./controllers/NetworkController.js");
-var AppService = require("./services/AppService.js");
-var AppController = require("./controllers/AppController.js");
 var SignupController = require("./controllers/SignupController.js");
 var LoginController = require("./controllers/LoginController.js");
 

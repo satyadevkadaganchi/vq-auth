@@ -1,7 +1,7 @@
 module.exports = (sequelize, DataTypes) => {
   const Model = sequelize.define("userEmail", {
       email: { type: DataTypes.STRING },
-      verified: { type: DataTypes.BOOL }
+      verified: { type: DataTypes.BOOLEAN }
   }, {
     tableName: 'userEmail',
     classMethods: {

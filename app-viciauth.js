@@ -1,12 +1,13 @@
-var cors = require("cors");
-var async = require("async");
-var express = require("express");
+const cors = require("cors");
+const async = require("async");
+const express = require("express");
+const models = require('./models/models');
 
-var CONFIG = {
+const CONFIG = {
 	PORT : 5000,
 };
 
-var app = express();
+const app = express();
 
 app.use(require("cors")());
 app.use(require('body-parser')());
@@ -15,13 +16,11 @@ app.use(require("./middleware/IdentifyApp.js"));
 
 require("./routes")(app);
 
-var server = app.listen(CONFIG.PORT, function() {
-	var host = server.address().address;
-	var port = server.address().port;
+models.seq.sync().then(() => {
+	var server = app.listen(CONFIG.PORT, () => {
+		var host = server.address().address;
+		var port = server.address().port;
 
-	console.log('ViciAuth listening at http://%s:%s', host, port);
+		console.log(`VQ-AUTH listening at http://${host}:${port}`);
+	});
 });
-
-
-
-

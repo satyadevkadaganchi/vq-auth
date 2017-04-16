@@ -20,8 +20,8 @@ const identifyApp = (req, res, next) => {
     ]
   }})
   .then(app => {
-     if (app) {
-          req.app = app;
+     if (app[0]) {
+          req.app = app[0];
       } else {
           req.app = false;
       }

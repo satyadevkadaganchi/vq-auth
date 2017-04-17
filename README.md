@@ -37,7 +37,8 @@ Allows authentification with password (local strategy).
 
 * **Error Response:**<br />
 **Code:** 400 <br />
-**Content:** ```
+**Content:**
+```
 {
     code: 'EMAIL_NOT_FOUND' 
 }

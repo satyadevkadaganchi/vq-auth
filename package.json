@@ -2,7 +2,7 @@
   "name": "vq-auth",
   "version": "0.0.0",
   "description": "Token-based Authentification microservice",
-  "main": "app-viciauth.js",
+  "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },

@@ -13,17 +13,17 @@ Sequelize library will create the DB tables if they do not exist the first time 
 
 ## API
 ### POST /auth/token
-This API Endpoint is intended for validation of user's token. The token need to be specified in 'X-Auth-Token' header.
+This API Endpoint is intended for validation of user's token. The token needs to be specified in 'X-Auth-Token' header.
 
 * **Success Response:**
- * **Code:** 200 <br />
- * **Content:** `{ appId: 1, userId: 1, 'blablabla-some-token' }`
+**Code:** 200 <br />
+**Content:** `{ appId: 1, userId: 1, 'blablabla-some-token' }`
 
-###POST /auth/local/signup
+### POST /auth/local/signup
 
-###POST /auth/local/login
+### POST /auth/local/login
 
-###POST /auth/networks/facebook
+### POST /auth/networks/facebook
 
 ## What is used?
 ExpressJS, Sequelize

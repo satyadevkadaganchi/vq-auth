@@ -2,7 +2,9 @@ const fs = require("fs");
 const path = require("path");
 const Sequelize = require("sequelize");
 
-const dbConn = process.env.VA_ENV === 'production' ? process.env.VQ_VA_DB : 'mysql://root:kurwa@localhost:3306/vq-auth';
+const dbConn = process.env.VA_ENV === 'production' ?
+  process.env.VQ_VA_DB :
+  process.env.VQ_VA_DB_TEST || 'mysql://root:kurwa@localhost:3306/vq-auth';
 
 const sequelize = new Sequelize(dbConn, {
   dialect: 'mysql',

@@ -6,7 +6,13 @@ Token-based authentification microservice
 You need to specify a connection to a mySQL database in your env. variables:
 
 ```
+export VA_ENV === 'production' || 'local'
+
+# database connection if VA_ENV is 'production'
 export VQ_VA_DB = mysql://<user>:<password>@<host>:3306/<dbname>
+
+# database connection if VA_ENV is 'local'
+export VQ_VA_DB_TEST = mysql://<user>:<password>@<host>:3306/<dbname>
 ```
 
 Sequelize library will create the DB tables if they do not exist the first time you start the server.

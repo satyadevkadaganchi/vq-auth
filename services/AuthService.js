@@ -69,7 +69,10 @@ const createNewEmail = (appId, userId, email, callback) => async.series([
 	callback => models.userEmail
 		.findOne({
 			where: {
-				$and: [ { appId }, { email } ]
+				$and: [ 
+					{ appId },
+					 { email }
+				]
 			}
 		})
 		.then(result => {
@@ -148,25 +151,30 @@ const createNewToken = (appId, userId, callback) =>
 
 const checkToken = (appId, token, callback) => models.userToken
 	.findOne({
-		token: token,
-		appId: appId
+		where: [
+			{ token },
+			{ appId }
+		]
 	})
 	.then(instance => callback(null, instance || false), err => callback(err));
 
 const checkPassword = (appId, userId, password, callback) =>
 	models.userPassword
 		.findOne({
-			userId: userId,
-			appId: appId
+			where: [
+				{ userId },
+				{ appId }
+			]
 		})
 		.then(instance => instance ? callback(null, validPasswordSync(password, instance.password)) : false, err => callback(err));
 
 const getUserIdFromEmail = (appId, email, callback) => {
 	return models.userEmail
 		.findOne({
-			appId: appId,
-			email: email,
-			appId: appId
+			where: [
+				{ appId },
+				{ email }
+			]
 		})
 		.then(instance => callback(null, instance || false), err => callback(err))
 };

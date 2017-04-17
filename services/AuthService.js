@@ -1,7 +1,6 @@
 const bcrypt = require('bcrypt-nodejs');
 const async = require("async");
 const randtoken = require('rand-token');
-const pool = require("./../config/db.js").pool;
 const models = require("../models");
 const logIndex = "[AuthService]";
 
@@ -17,45 +16,13 @@ const validPasswordSync = (password, encryptedPassword) => {
 	return bcrypt.compareSync(password, encryptedPassword);
 }
 
-function checkIfEmailAvailable(email, callback) {
-	var sql = "SELECT * FROM user WHERE email = ?";
-	
-	pool.query(sql, [email], function(err, result) {
-		if (err) {
-			return callback(err);
-		}
-
-		if (result.length) {
-			return callback(null, false);
-		}
-		return callback(null, true);
-	});
-}
-
-function logLogin(userId, medium) {
-	if (!userId) {
-		return console.error("logLogin emptry userId")
-	} else {
-		console.log("UserId", userId, "logged in.");
-	}
-	var loginObj = {};
-	loginObj.user_id = userId;
-	if (medium) {
-		loginObj.medium = medium;
-	}
-
-	pool.query("INSERT INTO login_history SET ?", loginObj, function(err, result) {
-		return err ? console.error(err) : true;
-	});
-}
-
-function createNewUser (appId, callback) {
+const createNewUser = (appId, callback) => {
 	return models.user
 		.create({ appId: appId })
 		.then(instance => callback(null, instance), err => callback(err));
-}
+};
 
-function createNewPassword (appId, userId, password, callback) {
+const createNewPassword = (appId, userId, password, callback) => {
 	models.userPassword
 		.create({ 
 			appId: appId, 
@@ -63,27 +30,27 @@ function createNewPassword (appId, userId, password, callback) {
 			password: generateHashSync(password)
 		})
 		.then(instance => callback(), err => callback(err));
-}
+};
 
 const createNewEmail = (appId, userId, email, callback) => async.series([
 	callback => models.userEmail
-		.findOne({
-			where: {
-				$and: [ 
-					{ appId },
-					 { email }
-				]
-			}
-		})
-		.then(result => {
-			if (result) {
-				return callback({
-					code: "EMAIL_EXISTS"
-				});
-			}
+	.findOne({
+		where: {
+			$and: [ 
+				{ appId },
+					{ email }
+			]
+		}
+	})
+	.then(result => {
+		if (result) {
+			return callback({
+				code: "EMAIL_EXISTS"
+			});
+		}
 
-			return callback();
-		}),
+		return callback();
+	}),
 	callback => {
 		models.userEmail
 		.create({
@@ -96,25 +63,27 @@ const createNewEmail = (appId, userId, email, callback) => async.series([
 ], err => callback(err));
 
 
-// migrated to new db names
-function getUserIdFromNetwork(network, networkId, callback) {
+
+const getUserIdFromNetwork = (network, networkId, callback) => {
 	var sql = "SELECT user.id AS userId FROM user AS user";
+
 	sql += " INNER JOIN userNetwork AS network";
 	sql += " ON network.userId = user.id"
-	sql += " WHERE network.networkId = ? AND network.network = ?";
+	sql += ` WHERE network.networkId = ${networkId} AND network.network = '${network}'`;
 
-	pool.query(sql, [networkId, network], function(err, result) {
+	models.seq.query(sql)
+	.then(result => {
 		if (err) {
 			return callback(err);
 		}
 
 		if (result.length) {
 			return callback(null, result[0])
-		} else {
-			return callback(null, false);
 		}
+
+		return callback(null, false);
 	});
-}
+};
 
 const updateNetworkToken = (userId, network, networkId, token) =>
 	models.userToken
@@ -122,8 +91,10 @@ const updateNetworkToken = (userId, network, networkId, token) =>
 			token: token
 		}, {
 			where: {
-				networkId: networkId,
-				userId: userId
+				$and: [ 
+					 { networkId },
+					 { userId },
+				]
 			}
 		})
 		.then(() => {}, err => console.error(err));
@@ -187,25 +158,45 @@ var addUserProp = function(userId, propKey, propValue, callback) {
 		});
 	}
 
-	var sql = "SELECT id FROM userProp WHERE userId = ? AND propKey = ?";
-
-	pool.query(sql, [ userId, propKey ], function(err, result) {
+	models.userProp.findOne({
+		where: [
+			{ userId },
+			{ propKey }
+		]
+	})
+	.then((err, result) => {
 		if (err) {
 			console.error(err);
+
 			return callback(err);
 		}
 
-		var insertSql = "INSERT INTO userProp SET propValue = ?, propKey = ?, userId = ?";
-		var updateSql = "UPDATE userProp SET propValue = ? WHERE propKey = ? AND userId = ?";
-		var commitSql = result.length ? updateSql : insertSql;
-	
-		pool.query(commitSql, [ propValue, propKey, userId ], function(err, result) {
-			if (err) {
-				return callback(err);
-			}
+		var promise;
 
-			return callback();
-		});
+		if (result) {
+			promise = models.userProp.update({ 
+				propValue 
+			}, { 
+				where: [
+					{ propKey },
+					{ userId }
+				]
+			});
+		} else {
+			promise = models.userProp.create({ 
+				propValue,
+				propKey,
+				userId
+			}, { 
+				where: [
+					{ propKey },
+					{ userId }
+				]
+			});
+		}
+		
+		promise
+		.then(() => callback(), callback);
 	});
 };
 
@@ -221,8 +212,6 @@ module.exports = {
 	getUserIdFromEmail: getUserIdFromEmail,
 	getUserIdFromNetwork: getUserIdFromNetwork,
 	updateNetworkToken: updateNetworkToken,
-	checkIfEmailAvailable: checkIfEmailAvailable,
-	logLogin: logLogin,
 	generateHashSync: generateHashSync,
 	validPasswordSync: validPasswordSync,
 };

@@ -15,7 +15,7 @@ Sequelize library will create the DB tables if they do not exist the first time 
 ### POST /auth/token
 This API Endpoint is intended for validation of user's token. The token needs to be specified in 'X-Auth-Token' header.
 
-* **Success Response:**
+* **Success Response:**<br />
 **Code:** 200 <br />
 **Content:** `{ appId: 1, userId: 1, 'blablabla-some-token' }`
 

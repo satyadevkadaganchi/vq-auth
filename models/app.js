@@ -8,6 +8,11 @@ module.exports = (sequelize, DataTypes) => {
     classMethods: {
         associate: models => {
             Model.belongsTo(models.account);
+            Model.hasMany(models.user);
+            Model.hasMany(models.userEmail);
+            Model.hasMany(models.userToken);
+            Model.hasMany(models.userNetwork);
+            Model.hasMany(models.userPassword);
         }
     }
   });

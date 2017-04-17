@@ -1,59 +1,49 @@
 var async = require("async");
 var AuthService = require("../services/AuthService.js");
 
-function createLocalAccount(appId,email,password,callback) {
-  
-  if(!appId||!email||!password){
-    return callback({status:400,code:"INITIAL_PARAMS"});
+const createLocalAccount = (appId, email, password, callback) => {
+  if (!appId || !email || !password) {
+    return callback({
+      status: 400,
+      code: "INITIAL_PARAMS"
+    });
   }
   
-  var newUser = {}, Token;
-	if(password){
+  var newUser = {};
+
+	if (password) {
 		newUser.password = AuthService.generateHashSync(password);
 	}
 	
   async.waterfall([
-    function(callback) {
-      AuthService.createNewUser(appId,function(err,rNewUser){
+    callback => {
+      AuthService.createNewUser(appId, (err, rNewUser) => {
         if (err) {
           return callback(err);
         }
-          newUser = rNewUser;
-          return callback();
+
+        newUser = rNewUser;
+        
+        return callback();
       });
     },
-    function(callback) {
-      AuthService.createNewEmail(appId,newUser.userId,email,function(err){
-        if (err) {
-          return callback(err);
-        }
-          return callback();
-      });
-    },  
-    function(callback) {
-      AuthService.createNewPassword(appId,newUser.userId,password,function(err){
-        if (err) {
-          return callback(err);
-        }
-          return callback();
-      });
+    callback => {
+      AuthService.createNewEmail(appId, newUser.id, email, callback);
+    },
+    callback => {
+      AuthService.createNewPassword(appId, newUser.id, password, callback);
     }, 
-        function(callback) {
-      AuthService.createNewToken(appId,newUser.userId,function(err,rToken){
-        if (err) {
-          return callback(err);
-        }
-          Token = rToken;
-          return callback();
-      });
-    }, 
-  ], function(err) {
-    callback(err, Token)
+    callback => {
+      AuthService.createNewToken(appId, newUser.id, callback);
+    }
+  ], (err, rUserToken) => {
+    if (err) {
+      console.error(err);
+    }
+
+    callback(err, rUserToken);
   });
-}
-
-
-
+};
 
 module.exports = {
 	createLocalAccount : createLocalAccount,

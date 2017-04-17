@@ -35,17 +35,16 @@ module.exports = app => {
     	});
 	});
 
-	app.post('/auth/local/signup', function (req,res) {
-		var appId = req.app ? req.app.id : false;
-		var email = req.body.email;
-		var password = req.body.password;
+	app.post('/auth/local/signup',  (req, res) => {
+		const appId = req.app ? req.app.id : false;
+		const email = req.body.email;
+		const password = req.body.password;
 
-		SignupController.createLocalAccount(appId, email, password, function (err,rUser) {
+		SignupController.createLocalAccount(appId, email, password, (err, rUser) => {
 			return sendResponse(res,err,rUser);
 		});
 	});
 
-	
 	app.post('/auth/local/login', function (req,res) {
 		var appId = req.app ? req.app.id : false;
 		var email = req.body.email;

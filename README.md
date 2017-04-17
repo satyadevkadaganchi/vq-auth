@@ -22,7 +22,7 @@ This API Endpoint is intended for validation of user's token. The token needs to
 ### POST /auth/local/login
 Allows authentification with password (local strategy).
 
-* **Request payload:**<br />
+* **Data params:**<br />
 'x-viciauth-api-key' and 'x-viciauth-app-key' headers required.
 ```
     {
@@ -37,15 +37,29 @@ Allows authentification with password (local strategy).
 
 * **Error Response:**<br />
 **Code:** 400 <br />
-**Content:**
-```
-{
-    code: 'EMAIL_NOT_FOUND' 
-}
-```
+**Content:** `{ code: 'EMAIL_NOT_FOUND' }`
 
 ### POST /auth/local/signup
 
+* **Data params:**<br />
+```
+    {
+        email: 'test@vq-labs.com', // required
+        password: 'super-secret' // required
+    }
+```
+* **Success Response:**<br />
+**Code:** 200 <br />
+**Content:** `{ appId: 1, userId: 1, token: 'blablabla-some-token' }`
+
+* **Error Response:**<br />
+    * **Code:** 400<br />
+      **Content:** `{ code: 'INITIAL_PARAMS' }`
+
+    OR
+
+    * **Code:** 400<br />
+      **Content:** `{ code: 'EMAIL_EXISTS' }`
 
 
 ### POST /auth/networks/facebook

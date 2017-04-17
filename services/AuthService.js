@@ -49,11 +49,10 @@ function logLogin(userId, medium) {
 	});
 }
 
-
 function createNewUser (appId, callback) {
-	models.user
+	return models.user
 		.create({ appId: appId })
-		.then(instance => callback(null, newUser), err => callback(err));
+		.then(instance => callback(null, instance), err => callback(err));
 }
 
 function createNewPassword (appId, userId, password, callback) {
@@ -68,9 +67,10 @@ function createNewPassword (appId, userId, password, callback) {
 
 const createNewEmail = (appId, userId, email, callback) => async.series([
 	callback => models.userEmail
-		.findOne({ 
-			appId: appId, 
-			email: email
+		.findOne({
+			where: {
+				$and: [ { appId }, { email } ]
+			}
 		})
 		.then(result => {
 			if (result) {

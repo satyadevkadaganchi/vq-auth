@@ -7,6 +7,7 @@ module.exports = (sequelize, DataTypes) => {
     classMethods: {
         associate: models => {
             Model.belongsTo(models.user);
+            Model.belongsTo(models.app);
         }
     }
   });

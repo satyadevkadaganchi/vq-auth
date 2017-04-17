@@ -1,26 +1,26 @@
-var AuthController = require("./controllers/AuthController.js");
-var NetworkController = require("./controllers/NetworkController.js");
-var SignupController = require("./controllers/SignupController.js");
-var LoginController = require("./controllers/LoginController.js");
+const AuthController = require("./controllers/AuthController.js");
+const NetworkController = require("./controllers/NetworkController.js");
+const SignupController = require("./controllers/SignupController.js");
+const LoginController = require("./controllers/LoginController.js");
 
-var sendResponse = function(res,err,data){
-	if(err){
-		if(err.status){
+const sendResponse = (res, err, data) => {
+	if (err) {
+		if (err.status) {
 			res.status(err.status).send(err);
-		}else{
+		} else {
 			console.log(err);
 			res.status(500).send(err);
 		}
-	}else{
+	} else {
 		res.status(200).send(data);
 	}
-}
+};
 
-module.exports = function(app) {
-
-	app.post('/auth/token', function(req, res, next) {
-		AuthController.checkToken(req.app.appId,req.auth.token, function (err,rUser) {
-			return sendResponse(res,err,rUser);
+module.exports = app => {
+	app.post('/auth/token', (req, res, next) => {
+		return AuthController
+		.checkToken(req.app.id, req.auth.token, (err, rUser) => {
+			return sendResponse(res, err, rUser)
 		});
 	});  
 	

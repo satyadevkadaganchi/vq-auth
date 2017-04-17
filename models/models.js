@@ -1,8 +1,10 @@
-var fs = require("fs");
-var path = require("path");
-var Sequelize = require("sequelize");
+const fs = require("fs");
+const path = require("path");
+const Sequelize = require("sequelize");
 
-var sequelize = new Sequelize(process.env.VA_ENV === 'production' ? process.env.VQ_VA_DB : 'mysql://root:kurwa@localhost:3306/vq-auth', {
+const dbConn = process.env.VA_ENV === 'production' ? process.env.VQ_VA_DB : 'mysql://root:kurwa@localhost:3306/vq-auth';
+
+const sequelize = new Sequelize(dbConn, {
   dialect: 'mysql',
   pool: {
     max: 50,
@@ -11,18 +13,17 @@ var sequelize = new Sequelize(process.env.VA_ENV === 'production' ? process.env.
   }
 });
 
-var db = {};
+const db = {};
 
 fs.readdirSync(__dirname)
-    .filter(function(file) {
-        return (file.indexOf(".") !== 0) && (file !== "models.js") && (file === "account.js" || file === "app.js");
-    })
-    .forEach(function(file) {
+    .filter(file => file.indexOf(".") !== 0 && file !== "models.js")
+    .forEach(file => {
         var model = sequelize.import(path.join(__dirname, file));
+
         db[model.name] = model;
     });
 
-Object.keys(db).forEach(function(modelName) {
+Object.keys(db).forEach(modelName => {
   if ("associate" in db[modelName]) {
     db[modelName].associate(db);
   }

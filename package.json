@@ -1,13 +1,13 @@
 {
-  "name": "ViciAuthServer",
+  "name": "vq-auth",
   "version": "0.0.0",
-  "description": "",
+  "description": "Token-based Authentification microservice",
   "main": "app-viciauth.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "",
-  "license": "BSD-2-Clause",
+  "author": "Adrian Barwicki (adrianbarwicki@gmail.com)",
+  "license": "Apache-2.0",
   "dependencies": {
     "async": "~1.5.2",
     "bcrypt-nodejs": "0.0.3",

@@ -1,7 +1,7 @@
 const cors = require("cors");
 const async = require("async");
 const express = require("express");
-const models = require('./models/models');
+const models = require('./models');
 
 const CONFIG = {
 	PORT : 5000,

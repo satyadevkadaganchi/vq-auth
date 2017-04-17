@@ -2,7 +2,7 @@ const bcrypt = require('bcrypt-nodejs');
 const async = require("async");
 const randtoken = require('rand-token');
 const pool = require("./../config/db.js").pool;
-const models = require("../models/models");
+const models = require("../models");
 const logIndex = "[AuthService]";
 
 const generateHashSync = password => bcrypt.hashSync(password, bcrypt.genSaltSync(8), null);

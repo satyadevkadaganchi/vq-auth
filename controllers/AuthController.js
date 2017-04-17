@@ -10,21 +10,28 @@ const checkToken = (appId,token,callback) => {
 	}
   
   async.waterfall([
-        callback => AuthService.checkToken(appId, token, (err, rUser) => {
+        callback => AuthService.checkToken(appId, token, (err, rUserToken) => {
           if (err) {
             return callback(err);
           }
           
-          if (!rUser) {   
+          if (!rUserToken) {
             return callback({
               status: 400, 
               code: "WRONG_TOKEN"
             });  
           }
 
-          return callback(null, rUser);
+          if (rUserToken.deleted) {
+            return callback({
+              status: 400, 
+              code: "INVALID_TOKEN"
+            });
+          }
+
+          return callback(null, rUserToken);
         }),
-  ], (err, rUser) => callback(err, rUser));
+  ], (err, rUserToken) => callback(err, rUserToken));
 }
 
 module.exports = {

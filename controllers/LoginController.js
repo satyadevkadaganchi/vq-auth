@@ -9,23 +9,25 @@ function loginWithPassword(appId,email,password,callback) {
 
   var User = {}, Token;
 
-	if(password){
+	if (password) {
 		User.password = AuthService.generateHashSync(password);
 	}
 	
   async.waterfall([
-        function(callback) {
-      AuthService.getUserIdFromEmail(appId,email,function(err,rUser){
-        if (err) {
-          return callback(err);
-        }
-          if(!rUser){   
-             return callback({status:400,code:"EMAIL_NOT_FOUND"});  
+    callback => {
+        AuthService.getUserIdFromEmail(appId, email, (err, rUser) => {
+          if (err) {
+            return callback(err);
           }
-        
-             User = rUser;
-             return callback();
-      });
+
+          if (!rUser) {
+            return callback({ status:400, code:"EMAIL_NOT_FOUND" });  
+          }
+          
+          User = rUser;
+
+          return callback();
+        });
     },
     function(callback) {
       AuthService.checkPassword(appId,User.userId,password,function(err,checkResult){

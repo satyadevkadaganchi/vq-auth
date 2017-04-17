@@ -13,15 +13,39 @@ Sequelize library will create the DB tables if they do not exist the first time 
 
 ## API
 ### POST /auth/token
-This API Endpoint is intended for validation of user's token. The token needs to be specified in 'X-Auth-Token' header.
+This API Endpoint is intended for validation of user's token. The token needs to be specified in 'x-viciauth-auth-token' header.
 
 * **Success Response:**<br />
 **Code:** 200 <br />
-**Content:** `{ appId: 1, userId: 1, 'blablabla-some-token' }`
+**Content:** `{ appId: 1, userId: 1, token: 'blablabla-some-token' }`
+
+### POST /auth/local/login
+Allows authentification with password (local strategy).
+
+* **Request payload:**<br />
+'x-viciauth-api-key' and 'x-viciauth-app-key' headers required.
+```
+    {
+        email: 'test@vq-labs.com',
+        password: 'super-secret'
+    }
+```
+
+* **Success Response:**<br />
+**Code:** 200 <br />
+**Content:** `{ appId: 1, userId: 1, token: 'blablabla-some-token' }`
+
+* **Error Response:**<br />
+**Code:** 400 <br />
+**Content:** ```
+{
+    code: 'EMAIL_NOT_FOUND' 
+}
+```
 
 ### POST /auth/local/signup
 
-### POST /auth/local/login
+
 
 ### POST /auth/networks/facebook
 

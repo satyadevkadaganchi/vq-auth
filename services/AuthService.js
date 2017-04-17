@@ -2,7 +2,7 @@ const bcrypt = require('bcrypt-nodejs');
 const async = require("async");
 const randtoken = require('rand-token');
 const pool = require("./../config/db.js").pool;
-
+const models = require("../models/models");
 const logIndex = "[AuthService]";
 
 const generateHashSync = password => bcrypt.hashSync(password, bcrypt.genSaltSync(8), null);
@@ -161,14 +161,15 @@ const checkPassword = (appId, userId, password, callback) =>
 		})
 		.then(instance => instance ? callback(null, validPasswordSync(password, instance.password)) : false, err => callback(err));
 
-const getUserIdFromEmail = (appId, email, callback) =>
-	models.userEmail
+const getUserIdFromEmail = (appId, email, callback) => {
+	return models.userEmail
 		.findOne({
 			appId: appId,
 			email: email,
 			appId: appId
 		})
-		.then(instance => callback(null, instance || false), err => callback(err));
+		.then(instance => callback(null, instance || false), err => callback(err))
+};
 
 var addUserProp = function(userId, propKey, propValue, callback) {
 	if (!userId || !propKey) {

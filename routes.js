@@ -2,6 +2,7 @@ const AuthController = require("./controllers/AuthCtrl.js");
 const NetworkController = require("./controllers/NetworkCtrl.js");
 const SignupController = require("./controllers/SignupCtrl.js");
 const LoginController = require("./controllers/LoginCtrl.js");
+const models = require("./models");
 
 const sendResponse = (res, err, data) => {
 	if (err) {
@@ -26,6 +27,22 @@ module.exports = app => {
 		});
 	});  
 	
+	/**
+	 * Marks the token as deleted, used for logout.
+	 * @param token: token that needs to be invalidated
+	 */
+	app.delete('/auth/token', (req, res, next) => {
+		return models.update({
+			deleted: 1 
+		}, {
+			where: [
+				{ token: req.body.token },
+				{ appId: req.auth.appId }
+			]
+		})
+		.then(() => sendResponse(res), err => sendResponse(res, err));
+	});
+
 	app.post('/auth/networks/facebook', (req,res) => {
 		var appId = req.app ? req.app.id : false;
 		var token = req.body.token;
@@ -46,7 +63,7 @@ module.exports = app => {
 			return sendResponse(res,err,rUser);
 		});
 	});
-
+	
 	app.post('/auth/local/login',  (req, res) => {
 		var appId = req.app ? req.app.id : false;
 		var email = req.body.email;
@@ -56,4 +73,10 @@ module.exports = app => {
 			return sendResponse(res, err, rUser);
 		});
 	});
+
+	app.post('/auth/pw-reset', (req, res, next) => {
+		sendResponse(res, null, null);
+	});
+
+	
 };
